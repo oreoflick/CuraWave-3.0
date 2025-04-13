@@ -1,0 +1,143 @@
+{% extends 'userbase.html' %}
+{% load static %}
+
+{% block content %}
+<!-- Page Header with improved contrast -->
+<div class="container-fluid page-header py-5 mb-5 position-relative">
+    <div class="overlay bg-dark opacity-75 position-absolute w-100 h-100 top-0"></div>
+    <div class="container position-relative py-5">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1 class="display-4 text-white fw-bold mb-3 text-shadow">Search Appointment</h1>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-0 py-2 px-4 rounded-pill bg-dark bg-opacity-50 d-inline-flex">
+                        <li class="breadcrumb-item"><a class="text-white text-shadow" href="{% url 'index' %}">Home</a></li>
+                        <li class="breadcrumb-item text-white text-shadow active" aria-current="page">Search Appointment</li>
+                    </ol>
+                </nav>
+            </div>
+            <div class="col-lg-4 text-center">
+                <i class="fas fa-search-plus fa-5x text-white text-shadow mb-3"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Search Section with improved visibility -->
+<div class="container-xxl py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card shadow-lg border-0">
+                    <div class="card-body p-5">
+                        <h4 class="card-title text-dark fw-bold mb-4">Search Appointments</h4>
+                        <form method="GET" class="search-form">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <div class="input-group shadow-sm">
+                                    <span class="input-group-text bg-white">
+                                        <i class="fas fa-search text-primary"></i>
+                                    </span>
+                                    <input type="text" 
+                                           id="query" 
+                                           name="query" 
+                                           class="form-control" 
+                                           placeholder="Search by name or appointment number..."
+                                           value="{{ query|default:'' }}"
+                                           required>
+                                </div>
+                                <small class="form-text text-secondary mt-2">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    Enter patient name or appointment number to search
+                                </small>
+                            </div>
+                            <div class="mt-4">
+                                <button type="submit" class="btn btn-primary btn-lg px-5 py-2">
+                                    <i class="fas fa-search me-2"></i>Search Appointments
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                {% if messages %}
+                <div class="messages mt-4">
+                    {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show shadow-sm" role="alert">
+                        <i class="fas {% if message.tags == 'error' %}fa-exclamation-triangle{% else %}fa-info-circle{% endif %} me-2"></i>
+                        <strong>{{ message }}</strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                {% if patient %}
+                <div class="card shadow-lg mt-4">
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="bg-primary">
+                                    <tr>
+                                        <th class="text-white py-3">Appointment #</th>
+                                        <th class="text-white py-3">Patient Name</th>
+                                        <th class="text-white py-3">Date</th>
+                                        <th class="text-white py-3">Time</th>
+                                        <th class="text-white py-3">Created</th>
+                                        <th class="text-white py-3">Status</th>
+                                        <th class="text-white py-3 text-end">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for i in patient %}
+                                    <tr>
+                                        <td class="align-middle fw-medium text-dark">{{i.appointmentnumber}}</td>
+                                        <td class="align-middle">
+                                            <div class="d-flex align-items-center">
+                                                <div class="avatar avatar-sm me-2">
+                                                    <img class="avatar-img rounded-circle" src="/{{i.patient.profile_pic}}" alt="Patient Image">
+                                                </div>
+                                                <span class="text-dark fw-medium">{{i.fullname}}</span>
+                                            </div>
+                                        </td>
+                                        <td class="align-middle text-dark">{{i.date_of_appointment}}</td>
+                                        <td class="align-middle text-dark">{{i.time_of_appointment}}</td>
+                                        <td class="align-middle text-dark">{{i.created_at}}</td>
+                                        <td class="align-middle">
+                                            {% if i.status == '0' %}
+                                            <span class="badge bg-secondary">Not Updated Yet</span>
+                                            {% elif i.status == 'Confirmed' %}
+                                            <span class="badge bg-success">{{i.status}}</span>
+                                            {% elif i.status == 'Cancelled' %}
+                                            <span class="badge bg-danger">{{i.status}}</span>
+                                            {% else %}
+                                            <span class="badge bg-primary">{{i.status}}</span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="align-middle text-end">
+                                            <a href="{% url 'viewappointmentdetails' i.id %}" class="btn btn-sm btn-primary">
+                                                <i class="fas fa-eye me-1"></i>View Details
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                {% elif query %}
+                <div class="text-center mt-5">
+                    <div class="text-muted">
+                        <i class="fas fa-search fa-4x mb-3 text-secondary"></i>
+                        <h4 class="text-dark mb-2">No records found for: "{{ query }}"</h4>
+                        <p class="text-secondary">Try adjusting your search terms</p>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

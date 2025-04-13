@@ -1,0 +1,120 @@
+{% load static %}
+{% if user.user_type == '1' %}
+<div class="header shadow-sm">
+    <div class="header-left">
+       <a href="{% url 'admin_home' %}" class="logo d-flex align-items-center">
+           <img src="{% static 'assets/img/logo.png'%}" alt="Logo" class="img-fluid" style="max-height: 45px">
+           <span class="ml-2 font-weight-bold text-primary">DAS</span>
+       </a>
+    </div>
+   
+    <div class="top-nav-search d-flex align-items-center">
+       <h4 class="mb-0 text-gradient">Doctor Appointment System</h4>
+    </div>
+    
+    <a class="mobile_btn" id="mobile_btn">
+        <i class="fas fa-bars"></i>
+    </a>
+    
+    <ul class="nav user-menu">
+       <li class="nav-item">
+          <a href="{% url 'admin_home' %}" class="nav-link">
+              <i class="fas fa-user-shield mr-2"></i>Admin Panel
+          </a>
+       </li>
+       <li class="nav-item">
+          <a href="{% url 'login' %}" class="nav-link">
+              <i class="fas fa-sign-in-alt mr-2"></i>Login as Admin
+          </a>
+       </li>
+       <li class="nav-item dropdown has-arrow">
+          <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
+              <div class="user-img-wrap">
+                  <img class="rounded-circle shadow-sm" src="/{{user.profile_pic}}" width="32" height="32" alt="Profile">
+                  <span class="status online"></span>
+              </div>
+          </a>
+          <div class="dropdown-menu dropdown-menu-right shadow-lg">
+             <div class="user-header">
+                <div class="avatar avatar-sm">
+                   <img src="/{{user.profile_pic}}" alt="User Image" class="avatar-img rounded-circle border">
+                </div>
+                <div class="user-text">
+                    <h6 class="mb-1">{{user.first_name}} {{user.last_name}}</h6>
+                    <p class="text-muted mb-0"><span class="badge badge-soft-primary">Administrator</span></p>
+                </div>
+             </div>
+             <div class="dropdown-body">
+                 <a class="dropdown-item d-flex align-items-center" href="{% url 'profile' %}">
+                     <i class="fas fa-user-circle mr-2 text-primary"></i>My Profile
+                 </a>
+                 <a class="dropdown-item d-flex align-items-center" href="{% url 'change_password' %}">
+                     <i class="fas fa-cog mr-2 text-primary"></i>Settings
+                 </a>
+                 <div class="dropdown-divider"></div>
+                 <a class="dropdown-item d-flex align-items-center text-danger" href="{% url 'logout' %}">
+                     <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                 </a>
+             </div>
+          </div>
+       </li>
+    </ul>
+</div>
+
+{% else %}
+<div class="header shadow-sm">
+    <div class="header-left">
+       <a href="{% url 'doctor_home' %}" class="logo d-flex align-items-center">
+           <img src="{% static 'assets/img/logo.png'%}" alt="Logo" class="img-fluid" style="max-height: 45px">
+           <span class="ml-2 font-weight-bold text-primary">DAS</span>
+       </a>
+    </div>
+   
+    <div class="top-nav-search d-flex align-items-center">
+       <h4 class="mb-0 text-gradient">Doctor Appointment System</h4>
+    </div>
+    
+    <a class="mobile_btn" id="mobile_btn">
+        <i class="fas fa-bars"></i>
+    </a>
+    
+    <ul class="nav user-menu">
+       <li class="nav-item">
+          <a href="{% url 'login' %}" class="nav-link">
+              <i class="fas fa-sign-in-alt mr-2"></i>Login as Admin
+          </a>
+       </li>
+       <li class="nav-item dropdown has-arrow">
+          <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
+              <div class="user-img-wrap">
+                  <img class="rounded-circle shadow-sm" src="/{{user.profile_pic}}" width="32" height="32" alt="Profile">
+                  <span class="status online"></span>
+              </div>
+          </a>
+          <div class="dropdown-menu dropdown-menu-right shadow-lg">
+             <div class="user-header">
+                <div class="avatar avatar-sm">
+                   <img src="/{{user.profile_pic}}" alt="User Image" class="avatar-img rounded-circle border">
+                </div>
+                <div class="user-text">
+                    <h6 class="mb-1">{{user.first_name}} {{user.last_name}}</h6>
+                    <p class="text-muted mb-0"><span class="badge badge-soft-info">Doctor</span></p>
+                </div>
+             </div>
+             <div class="dropdown-body">
+                 <a class="dropdown-item d-flex align-items-center" href="{% url 'profile' %}">
+                     <i class="fas fa-user-circle mr-2 text-primary"></i>My Profile
+                 </a>
+                 <a class="dropdown-item d-flex align-items-center" href="{% url 'change_password' %}">
+                     <i class="fas fa-cog mr-2 text-primary"></i>Settings
+                 </a>
+                 <div class="dropdown-divider"></div>
+                 <a class="dropdown-item d-flex align-items-center text-danger" href="{% url 'logout' %}">
+                     <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                 </a>
+             </div>
+          </div>
+       </li>
+    </ul>
+</div>
+{% endif %}

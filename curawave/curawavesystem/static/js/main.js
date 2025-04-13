@@ -42,6 +42,31 @@
         time: 2000
     });
 
+    // Initialize counter-up
+    const counterElements = document.querySelectorAll('[data-toggle="counter-up"]');
+    counterElements.forEach(element => {
+        new Waypoint({
+            element: element,
+            handler: function() {
+                const target = parseInt(element.getAttribute('data-toggle-target')) || 0;
+                let count = 0;
+                const updateCounter = () => {
+                    const increment = target / 20;
+                    count = Math.ceil(count + increment);
+                    if (count < target) {
+                        element.textContent = count;
+                        setTimeout(updateCounter, 100);
+                    } else {
+                        element.textContent = target;
+                    }
+                };
+                updateCounter();
+                this.destroy();
+            },
+            offset: '90%'
+        });
+    });
+
     // Header carousel
     $(".header-carousel").owlCarousel({
         autoplay: true,
@@ -49,11 +74,9 @@
         items: 1,
         dots: true,
         loop: true,
-        nav: true,
-        navText: [
-            '<i class="bi bi-chevron-left"></i>',
-            '<i class="bi bi-chevron-right"></i>'
-        ]
+        nav: false,
+        animateOut: 'fadeOut',
+        animateIn: 'fadeIn'
     });
 
     // Testimonials carousel

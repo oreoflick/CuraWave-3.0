@@ -292,6 +292,49 @@ body {
     transform: translateX(5px);
 }
 
+/* Navbar Button Styles */
+.navbar .btn-sm {
+    padding: 0.4rem 1.2rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    margin-left: 0.5rem;
+    height: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.navbar .btn-primary {
+    background: var(--primary);
+    border: none;
+    box-shadow: 0 2px 4px rgba(44, 123, 229, 0.2);
+}
+
+.navbar .btn-primary:hover {
+    background: linear-gradient(45deg, var(--primary), #357abd);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(44, 123, 229, 0.25);
+}
+
+.navbar .btn-outline-primary {
+    border: 1.5px solid var(--primary);
+    color: var(--primary);
+    background: transparent;
+}
+
+.navbar .btn-outline-primary:hover {
+    background: var(--primary);
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(44, 123, 229, 0.15);
+}
+
+.navbar .btn-sm i {
+    font-size: 0.9rem;
+}
 @keyframes fadeInDown {
     from {
         opacity: 0;

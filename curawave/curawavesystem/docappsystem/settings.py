@@ -139,8 +139,22 @@ STATICFILES_DIRS = [
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+# Email Configuration
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'your-system-email@gmail.com'  # Replace with your system email
+EMAIL_HOST_USER = DEFAULT_FROM_EMAIL  # Email will be sent from this address
+EMAIL_HOST_PASSWORD = 'your-app-password'  # Replace with your app password
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'dasapp.CustomUser'
+
+AUTHENTICATION_BACKENDS = [
+    'dasapp.EmailBackEnd.EmailBackEnd',
+    'django.contrib.auth.backends.ModelBackend',
+]

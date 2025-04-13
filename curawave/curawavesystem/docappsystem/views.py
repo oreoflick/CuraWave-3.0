@@ -1,6 +1,6 @@
 from django.shortcuts import render,redirect,HttpResponse
 from dasapp.EmailBackEnd import EmailBackEnd
-from django.contrib.auth import  logout,login
+from django.contrib.auth import authenticate, logout,login
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from dasapp.models import CustomUser
@@ -20,25 +20,42 @@ def doLogout(request):
 
 def doLogin(request):
     if request.method == 'POST':
-        user = EmailBackEnd.authenticate(request,
-                                         username=request.POST.get('email'),
-                                         password=request.POST.get('password')
-                                         )
-        if user!=None:
-            login(request,user)
-            user_type = user.user_type
-            if user_type == '1':
-                 return redirect('admin_home')
-            elif user_type == '2':
-                 return redirect('doctor_home')
-            elif user_type == '3':
-                return HttpResponse("This is User panel")
-        else:
-            messages.error(request,'Email or Password is not valid')
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        
+        if not email or not password:
+            messages.error(request, 'Please provide both email and password')
             return redirect('login')
-    else:
-        messages.error(request,'Email or Password is not valid')
-        return redirect('login')
+            
+        try:
+            user = authenticate(request, username=email, password=password)
+            
+            if user is not None:
+                if user.is_active:
+                    login(request, user)
+                    user_type = user.user_type
+                    
+                    if user_type == '1':
+                        return redirect('admin_home')
+                    elif user_type == '2':
+                        return redirect('doctor_home')
+                    elif user_type == '3':
+                        return redirect('user_home')
+                    else:
+                        messages.error(request, 'Invalid user type')
+                        return redirect('login')
+                else:
+                    messages.error(request, 'Your account is not active')
+                    return redirect('login')
+            else:
+                messages.error(request, 'Invalid Email or Password')
+                return redirect('login')
+                
+        except Exception as e:
+            messages.error(request, f'An error occurred: {str(e)}')
+            return redirect('login')
+            
+    return redirect('login')
 
 @login_required(login_url='/')
 def PROFILE(request):
@@ -77,25 +94,25 @@ def PROFILE_UPDATE(request):
     return render(request,'profile.html')
 
 def CHANGE_PASSWORD(request):
-     context ={}
-     ch = User.objects.filter(id = request.user.id)
+    context = {}
+    ch = User.objects.filter(id = request.user.id)
      
-     if len(ch)>0:
-            data = User.objects.get(id = request.user.id)
-            context["data"]:data            
-     if request.method == "POST":        
+    if len(ch) > 0:
+        data = User.objects.get(id = request.user.id)
+        context["data"] = data            
+    if request.method == "POST":        
         current = request.POST["cpwd"]
         new_pas = request.POST['npwd']
         user = User.objects.get(id = request.user.id)
         un = user.username
         check = user.check_password(current)
         if check == True:
-          user.set_password(new_pas)
-          user.save()
-          messages.success(request,'Password Change  Succeesfully!!!')
-          user = User.objects.get(username=un)
-          login(request,user)
+            user.set_password(new_pas)
+            user.save()
+            messages.success(request,'Password Changed Successfully!')
+            user = User.objects.get(username=un)
+            login(request,user)
         else:
-          messages.success(request,'Current Password wrong!!!')
-          return redirect("change_password")
-     return render(request,'change-password.html')
+            messages.error(request,'Current Password is incorrect!')
+            return redirect("change_password")
+    return render(request,'change-password.html', context)

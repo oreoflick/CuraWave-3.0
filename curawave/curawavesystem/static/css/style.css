@@ -1237,3 +1237,119 @@ body {
 .text-muted {
     color: #6c757d !important;
 }
+
+/* Header Carousel */
+.header-carousel {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--border-radius);
+    height: 400px;  /* Reduced height */
+}
+
+.header-carousel .carousel-item {
+    position: relative;
+    width: 100%;
+    height: 400px;  /* Reduced height */
+}
+
+.header-carousel .carousel-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: var(--border-radius);
+}
+
+.header-carousel .owl-nav {
+    position: absolute;
+    width: 100%;
+    height: 40px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    justify-content: space-between;
+    padding: 0 1rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.header-carousel:hover .owl-nav {
+    opacity: 1;
+}
+
+.header-carousel .owl-nav button {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.2) !important;
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    border-radius: 50%;
+    color: #fff !important;
+    font-size: 20px;
+    transition: all 0.3s ease;
+}
+
+.header-carousel .owl-nav button:hover {
+    background: var(--primary) !important;
+    border-color: var(--primary) !important;
+    transform: scale(1.1);
+}
+
+.header-carousel .owl-dots {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+}
+
+.header-carousel .owl-dot {
+    width: 8px;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.5) !important;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.header-carousel .owl-dot.active {
+    background: var(--primary) !important;
+    transform: scale(1.2);
+}
+
+/* Carousel Animations */
+@keyframes slideInLeft {
+    from {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.header-carousel .animated.slideInLeft {
+    animation: slideInLeft 1s ease-out;
+}
+
+.header-carousel .animated.slideInRight {
+    animation: slideInRight 1s ease-out;
+}
+
+.hero-section {
+    padding: 3rem;
+}

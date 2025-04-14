@@ -275,5 +275,41 @@ Version      : 1.0
 			$('body').delay(350).css({ 'overflow': 'visible' });
 		}
 	})
+
+    // Modal Cleanup
+    $(document).ready(function() {
+        // Remove any existing backdrops on page load
+        $('.modal-backdrop').remove();
+        
+        // Handle modal show
+        $(document).on('click', '[data-toggle="modal"]', function() {
+            $('.modal-backdrop').remove();
+            $('body').removeClass('modal-open');
+        });
+
+        // Handle modal hide
+        $(document).on('hidden.bs.modal', '.modal', function() {
+            $('.modal-backdrop').remove();
+            $('body').removeClass('modal-open');
+            $('body').css('padding-right', '');
+            $(this).removeData('bs.modal');
+        });
+
+        // Handle manual modal close via button
+        $(document).on('click', '[data-dismiss="modal"]', function() {
+            $('.modal-backdrop').remove();
+            $('body').removeClass('modal-open');
+            $('body').css('padding-right', '');
+        });
+
+        // Clean up on ESC key
+        $(document).on('keydown', function(e) {
+            if (e.keyCode === 27) { // ESC key
+                $('.modal-backdrop').remove();
+                $('body').removeClass('modal-open');
+                $('body').css('padding-right', '');
+            }
+        });
+    });
 	
 })(jQuery);

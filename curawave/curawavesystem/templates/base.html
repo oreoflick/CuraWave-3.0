@@ -81,6 +81,26 @@
                 timerProgressBar: true
             });
         }
+
+        // Global modal initialization
+        $(document).ready(function() {
+            // Configure default modal options
+            $.fn.modal.Constructor.prototype.enforceFocus = function() {};
+            
+            // Remove any leftover backdrops on page load
+            $('.modal-backdrop').remove();
+            $('body').removeClass('modal-open');
+            
+            // Initialize all modals with proper options
+            $('.modal').each(function() {
+                $(this).modal({
+                    backdrop: false,
+                    show: false
+                });
+            });
+        });
     </script>
+    
+    {% block extra_js %}{% endblock %}
  </body>
 </html>

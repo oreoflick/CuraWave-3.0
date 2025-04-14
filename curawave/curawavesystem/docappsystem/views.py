@@ -22,7 +22,11 @@ def PATIENT_LOGIN(request):
 
 def doLogout(request):
     logout(request)
-    return redirect('login')
+    response = redirect('index')
+    response['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    response['Pragma'] = 'no-cache'
+    response['Expires'] = '0'
+    return response
 
 def doLogin(request):
     if request.method == 'POST':

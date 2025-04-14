@@ -5,6 +5,9 @@
     <title>CuraWave - Your Health, Our Priority</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
 
     <!-- Favicon -->
     <link href="{% static 'img/favicon.ico'%}" rel="icon">
@@ -45,7 +48,6 @@
             <div class="navbar-nav me-auto p-4 p-lg-0">
                 <a href="{% url 'index' %}" class="nav-item nav-link {% if request.path == '/' %}active{% endif %}">Home</a>
                 <a href="{% url 'appointment' %}" class="nav-item nav-link {% if 'appointment' in request.path %}active{% endif %}">Appointment</a>
-                <a href="{% url 'user_search_appointment' %}" class="nav-item nav-link {% if 'search' in request.path %}active{% endif %}">Search</a>
             </div>
             <div class="navbar-nav ms-auto p-4 p-lg-0">
                 {% if user.is_authenticated %}

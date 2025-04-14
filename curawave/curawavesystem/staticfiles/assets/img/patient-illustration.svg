@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="400" height="400" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- Background shape -->
+    <circle cx="200" cy="200" r="180" fill="rgba(255,255,255,0.1)"/>
+    
+    <!-- Heart beat line -->
+    <path d="M60 200 L120 200 L140 160 L160 240 L180 160 L200 240 L220 160 L240 200 L340 200" 
+          stroke="#ffffff" 
+          stroke-width="8" 
+          stroke-linecap="round"
+          stroke-linejoin="round"/>
+    
+    <!-- Heart icon -->
+    <path d="M190 140C190 140 170 120 150 120C130 120 110 140 110 160C110 200 190 240 190 240C190 240 270 200 270 160C270 140 250 120 230 120C210 120 190 140 190 140Z" 
+          fill="#1de9b6"/>
+    
+    <!-- Medical symbols -->
+    <circle cx="140" cy="280" r="20" fill="#ffffff"/>
+    <circle cx="260" cy="280" r="20" fill="#ffffff"/>
+    <rect x="120" y="270" width="160" height="20" fill="#ffffff"/>
+</svg>

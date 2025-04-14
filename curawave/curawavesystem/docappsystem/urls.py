@@ -68,6 +68,8 @@ urlpatterns = [
     path('userbase/', userviews.USERBASE, name='userbase'),
     path('', userviews.Index, name='index'),
     
+    path('privacy-policy/', userviews.privacy_policy, name='privacy_policy'),
+    path('terms-and-conditions/', userviews.terms_and_conditions, name='terms_conditions'),
     
     path('userappointment/', userviews.create_appointment, name='appointment'),
     path('User_SearchAppointment', userviews.User_Search_Appointments, name='user_search_appointment'),

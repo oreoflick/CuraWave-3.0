@@ -110,8 +110,8 @@
                     <a class="btn btn-link text-white-50" href="{% url 'index' %}#about">About Us</a>
                     <a class="btn btn-link text-white-50" href="{% url 'index' %}#contact">Contact Us</a>
                     <a class="btn btn-link text-white-50" href="{% url 'index' %}#services">Our Services</a>
-                    <a class="btn btn-link text-white-50" href="{% url 'index' %}#privacy">Privacy Policy</a>
-                    <a class="btn btn-link text-white-50" href="{% url 'index' %}#terms">Terms & Condition</a>
+                    <a class="btn btn-link text-white-50" href="{% url 'privacy_policy' %}">Privacy Policy</a>
+                    <a class="btn btn-link text-white-50" href="{% url 'terms_conditions' %}">Terms & Conditions</a>
                 </div>
                 <div class="col-lg-6 col-md-6">
                     <h5 class="text-white mb-4">Newsletter</h5>
@@ -171,7 +171,7 @@
 
     <script>
         $(document).ready(function() {
-            // Initialize Owl Carousel
+            // Initialize Owl Carousel for header
             $(".header-carousel").owlCarousel({
                 items: 1,
                 loop: true,
@@ -186,6 +186,27 @@
                     '<i class="bi bi-chevron-left"></i>',
                     '<i class="bi bi-chevron-right"></i>'
                 ]
+            });
+
+            // Initialize testimonial carousel
+            $(".testimonial-carousel").owlCarousel({
+                autoplay: true,
+                smartSpeed: 1500,
+                margin: 24,
+                dots: true,
+                loop: true,
+                nav: false,
+                responsive: {
+                    0:{
+                        items:1
+                    },
+                    768:{
+                        items:2
+                    },
+                    992:{
+                        items:3
+                    }
+                }
             });
 
             // Initialize WOW.js for animations

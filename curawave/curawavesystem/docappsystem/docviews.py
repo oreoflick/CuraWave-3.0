@@ -111,16 +111,28 @@ def Patient_Appointment_Details(request,id):
 
 def Patient_Appointment_Details_Remark(request):
     if request.method == 'POST':
-        patient_id = request.POST.get('pat_id')
-        remark = request.POST['remark']
-        status = request.POST['status']
-        patientaptdet = Appointment.objects.get(id=patient_id)
-        patientaptdet.remark = remark
-        patientaptdet.status = status
-        patientaptdet.save()
-        messages.success(request,"Status Update successfully")
+        try:
+            patient_id = request.POST.get('pat_id')
+            remark = request.POST.get('remark')
+            status = request.POST.get('status')
+            
+            if not all([patient_id, remark, status]):
+                messages.error(request, "All fields are required")
+                return redirect('view_appointment')
+                
+            patientaptdet = Appointment.objects.get(id=patient_id)
+            patientaptdet.remark = remark
+            patientaptdet.status = status
+            patientaptdet.save()
+            messages.success(request, "Status Updated successfully")
+        except Appointment.DoesNotExist:
+            messages.error(request, "Appointment not found")
+        except Exception as e:
+            messages.error(request, f"An error occurred: {str(e)}")
         return redirect('view_appointment')
-    return render(request,'doc/view_appointment.html',context)
+    
+    # If not POST, redirect to view appointment
+    return redirect('view_appointment')
 
 def Patient_Approved_Appointment(request):
     doctor_admin = request.user

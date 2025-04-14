@@ -18,16 +18,10 @@
                         <span>My Profile</span>
                     </a>
                 </li>
-                <li class="{% if request.path == '/userappointment/' %}active{% endif %}">
+                <li class="{% if request.path == '/Book_Appointment' %}active{% endif %}">
                     <a href="{% url 'appointment' %}">
                         <i class="fas fa-calendar-check"></i>
                         <span>Book Appointment</span>
-                    </a>
-                </li>
-                <li class="{% if request.path == '/User_SearchAppointment' %}active{% endif %}">
-                    <a href="{% url 'user_search_appointment' %}">
-                        <i class="fas fa-search"></i>
-                        <span>Search Appointments</span>
                     </a>
                 </li>
             </ul>

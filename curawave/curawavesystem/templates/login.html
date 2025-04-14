@@ -4,6 +4,9 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>CuraWave - Healthcare Portal</title>
     <link rel="shortcut icon" type="image/x-icon" href="{% static 'assets/img/favicon.png' %}">
     <link rel="stylesheet" href="{% static 'assets/plugins/bootstrap/css/bootstrap.min.css' %}">
@@ -312,7 +315,12 @@
                     </div>
                     <div class="login-right">
                         <div class="login-right-wrap login-animation">
-                            <h1 class="mb-4">Login</h1>
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <h1 class="mb-0">Login</h1>
+                                <a href="{% url 'index' %}" class="btn btn-outline-primary">
+                                    <i class="fas fa-home"></i> Home
+                                </a>
+                            </div>
                             <form action="{% url 'doLogin' %}" method="post" id="loginForm" novalidate>
                                 {% csrf_token %}
                                 

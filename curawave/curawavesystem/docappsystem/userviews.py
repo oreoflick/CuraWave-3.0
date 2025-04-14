@@ -133,6 +133,20 @@ def View_Appointment_Details(request, id):
 
     return render(request, 'user_appointment-details.html', context)
 
+def privacy_policy(request):
+    page = Page.objects.all()
+    context = {
+        'page': page,
+    }
+    return render(request, 'privacy-policy.html', context)
+
+def terms_and_conditions(request):
+    page = Page.objects.all()
+    context = {
+        'page': page,
+    }
+    return render(request, 'terms-and-conditions.html', context)
+
 
 
 

@@ -21,118 +21,81 @@
     <div class="container">
         <div class="row g-5">
             <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.1s">
-                <p class="d-inline-block border rounded-pill py-1 px-4">Appointment</p>
-                <h1 class="mb-4">Schedule Your Visit with Our Healthcare Professionals</h1>
-                <p class="mb-4">Book an appointment with our expert doctors for personalized care and comprehensive medical attention. We ensure convenient scheduling and minimal waiting times for your healthcare needs.</p>
-                {% for i in page %}
-                <div class="bg-light rounded d-flex align-items-center p-5 mb-4">
-                    <div class="d-flex flex-shrink-0 align-items-center justify-content-center rounded-circle bg-white" style="width: 55px; height: 55px;">
-                        <i class="fa fa-phone-alt text-primary"></i>
-                    </div>
-                    <div class="ms-4">
-                        <p class="mb-2">Call Us Now</p>
-                        <h5 class="mb-0">+{{i.mobilenumber}}</h5>
-                    </div>
+                <p class="d-inline-block border rounded-pill py-1 px-4 text-primary">Appointment</p>
+                <h1 class="mb-4">Book an Appointment</h1>
+                <p class="mb-4">Schedule your appointment with our expert doctors. Please note that appointments are only available on weekdays between 9:00 AM and 5:00 PM.</p>
+                {% if messages %}
+                {% for message in messages %}
+                <div class="alert {% if message.tags == 'error' %}alert-danger{% else %}alert-{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
-                <div class="bg-light rounded d-flex align-items-center p-5">
-                    <div class="d-flex flex-shrink-0 align-items-center justify-content-center rounded-circle bg-white" style="width: 55px; height: 55px;">
-                        <i class="fa fa-envelope-open text-primary"></i>
-                    </div>
-                    <div class="ms-4">
-                        <p class="mb-2">Mail Us Now</p>
-                        <h5 class="mb-0">{{i.email}}</h5>
-                    </div>
-                </div>
-                <div class="bg-light rounded d-flex align-items-center p-5">
-                    <div class="d-flex flex-shrink-0 align-items-center justify-content-center rounded-circle bg-white" style="width: 55px; height: 55px;">
-                        <i class="fa fa-map-marker-alt text-primary me-2"></i>
-                    </div>
-                    <div class="ms-4">
-                        <p class="mb-2">Address</p>
-                        <h5 class="mb-0">{{i.address}}</h5>
-                    </div>
-                </div>
-            </div>{% endfor %}
+                {% endfor %}
+                {% endif %}
+            </div>
             <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.5s">
                 <div class="bg-light rounded h-100 d-flex align-items-center p-5">
-                    <form method="POST" action="{% url 'appointment' %}" id="appointmentForm">
-                        {% if messages %}
-                        {% for message in messages %}
-                         {% if message.tags == 'error' %}
-                       <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                      {{message}}
-                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                     <span aria-hidden="true">&times;</span>
-                         </button>
-                          </div>
-                       {% endif %}
-                        {% endfor %}
-                       {% endif %}
-                           {% if messages %}
-                        {% for message in messages %}
-                         {% if message.tags == 'success' %}
-                       <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                      {{message}}
-                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                     <span aria-hidden="true">&times;</span>
-                         </button>
-                          </div>
-                       {% endif %}
-                        {% endfor %}
-                       {% endif %}
+                    <form method="POST" action="{% url 'appointment' %}">
                         {% csrf_token %}
                         <div class="row g-3">
                             <div class="col-12 col-sm-6">
-                                <input type="text" class="form-control border-0" placeholder="Your Name" style="height: 55px;" name="fullname" required="true">
+                                <input type="text" class="form-control border-0" placeholder="Your Name" 
+                                    style="height: 55px;" name="fullname" required 
+                                    {% if user.is_authenticated and user.user_type == '3' %}
+                                    value="{{ user.get_full_name }}" 
+                                    {% endif %}>
                             </div>
                             <div class="col-12 col-sm-6">
-                                <input type="email" class="form-control border-0" placeholder="Your Email" style="height: 55px;" name="email" pattern="[^ @]*@[^ @]*" required="true">
+                                <input type="email" class="form-control border-0" placeholder="Your Email" 
+                                    style="height: 55px;" name="email" required 
+                                    {% if user.is_authenticated and user.user_type == '3' %}
+                                    value="{{ user.email }}" 
+                                    {% endif %}>
                             </div>
                             <div class="col-12 col-sm-6">
-                                <input type="text" class="form-control border-0" placeholder="Your Mobile" style="height: 55px;" name="mobilenumber" maxlength="10" required="true">
+                                <input type="text" class="form-control border-0" placeholder="Your Mobile" 
+                                    style="height: 55px;" name="mobilenumber" maxlength="10" required 
+                                    {% if user.is_authenticated and user.user_type == '3' %}
+                                    value="{{ patient.mobile_number }}" 
+                                    {% endif %}>
                             </div>
                             <div class="col-12 col-sm-6">
-                                <select class="form-select border-0" style="height: 55px;" name="doctor_id" required="true">
-                                    <option selected>Choose Doctor</option>
+                                <select class="form-select border-0" style="height: 55px;" name="doctor_id" required>
+                                    <option value="">Choose Doctor</option>
                                     {% for doctor in doctorview %}
-        <option value="{{ doctor.id }}">{{ doctor.admin.first_name }} {{ doctor.admin.last_name }}({{ doctor.specialization_id.sname }})</option>
-    {% endfor %}
-                                    
+                                    <option value="{{ doctor.id }}">
+                                        Dr. {{ doctor.admin.first_name }} {{ doctor.admin.last_name }}
+                                        ({{ doctor.specialization_id.sname }})
+                                    </option>
+                                    {% endfor %}
                                 </select>
                             </div>
                             <div class="col-12 col-sm-6">
                                 <div class="date" id="date">
-                                    <input type="date"
-                                        class="form-control border-0"
-                                        id="appointmentDate"
-                                        placeholder="Choose Date" 
-                                        style="height: 55px;" 
-                                        name="date_of_appointment" 
-                                        required="true"
-                                        min="{{ today_date|date:'Y-m-d' }}">
+                                    <input type="date" class="form-control border-0" 
+                                        id="appointmentDate" name="date_of_appointment" 
+                                        style="height: 55px;" required 
+                                        min="{{ today_date }}"
+                                        onchange="updateTimeSlots()">
                                 </div>
                             </div>
                             <div class="col-12 col-sm-6">
                                 <div class="time" id="time">
-                                    <input type="time" 
-                                        class="form-control border-0" 
-                                        id="appointmentTime"
-                                        placeholder="Choose Time" 
-                                        style="height: 55px;" 
-                                        name="time_of_appointment" 
-                                        required="true"
-                                        min="09:00"
-                                        max="17:00"
+                                    <input type="time" class="form-control border-0" 
+                                        id="appointmentTime" name="time_of_appointment" 
+                                        style="height: 55px;" required
+                                        min="{{ min_time }}" max="{{ max_time }}"
                                         step="1800">
-                                    <datalist id="timeSlots"></datalist>
                                 </div>
-                                <small class="text-muted">Available hours: 9:00 AM - 5:00 PM (30-minute slots)</small>
                             </div>
-                            
-                            <div class="col-12" style="padding-top: 20px;">
-                                <textarea class="form-control border-0" rows="5" placeholder="Describe your problem" name="additional_msg"></textarea>
+                            <div class="col-12">
+                                <textarea class="form-control border-0" rows="5" 
+                                    placeholder="Additional Message (Optional)"
+                                    name="additional_msg"></textarea>
                             </div>
-                            <div class="col-12" style="padding-top: 20px;">
+                            <div class="col-12">
                                 <button class="btn btn-primary w-100 py-3" type="submit">Book Appointment</button>
                             </div>
                         </div>
@@ -148,41 +111,32 @@
 
 {% block extra_js %}
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const appointmentForm = document.getElementById('appointmentForm');
+function updateTimeSlots() {
     const dateInput = document.getElementById('appointmentDate');
     const timeInput = document.getElementById('appointmentTime');
+    const selectedDate = new Date(dateInput.value);
+    const dayOfWeek = selectedDate.getDay();
 
-    // Set minimum date to today
-    const today = new Date();
-    const dd = String(today.getDate()).padStart(2, '0');
-    const mm = String(today.getMonth() + 1).padStart(2, '0');
-    const yyyy = today.getFullYear();
-    dateInput.min = yyyy + '-' + mm + '-' + dd;
+    // Disable weekends (0 = Sunday, 6 = Saturday)
+    if (dayOfWeek === 0 || dayOfWeek === 6) {
+        dateInput.setCustomValidity('Please select a weekday (Monday-Friday)');
+    } else {
+        dateInput.setCustomValidity('');
+    }
+}
 
-    appointmentForm.addEventListener('submit', function(e) {
-        const selectedDate = new Date(dateInput.value);
-        const selectedTime = timeInput.value;
-        const dayOfWeek = selectedDate.getDay();
+document.getElementById('appointmentTime').addEventListener('change', function() {
+    const timeInput = this;
+    const selectedTime = timeInput.value;
+    const [hours, minutes] = selectedTime.split(':').map(Number);
+    const time = hours * 60 + minutes;
 
-        // Check if selected day is a weekend
-        if (dayOfWeek === 0 || dayOfWeek === 6) {
-            e.preventDefault();
-            alert('Please select a weekday for your appointment (Monday-Friday).');
-            return false;
-        }
-
-        // Convert time to 24-hour format for comparison
-        const timeArr = selectedTime.split(':');
-        const hour = parseInt(timeArr[0]);
-
-        // Check if selected time is within business hours (9 AM - 5 PM)
-        if (hour < 9 || hour >= 17) {
-            e.preventDefault();
-            alert('Please select a time between 9:00 AM and 5:00 PM.');
-            return false;
-        }
-    });
+    // Check if time is within business hours (9 AM - 5 PM)
+    if (time < 9 * 60 || time > 17 * 60) {
+        timeInput.setCustomValidity('Please select a time between 9:00 AM and 5:00 PM');
+    } else {
+        timeInput.setCustomValidity('');
+    }
 });
 </script>
 <script src="{% static 'js/appointment.js' %}"></script>

@@ -1,0 +1,33 @@
+{% extends "emails/base_email.html" %}
+
+{% block title %}Appointment Approved{% endblock %}
+
+{% block content %}
+<h2>Dear {{ patient_name }},</h2>
+
+<p>Great news! Your appointment has been approved by {{ doctor_name }}.</p>
+
+<p><strong>Appointment Details:</strong></p>
+<ul>
+    <li><strong>Appointment Number:</strong> {{ appointment.appointmentnumber }}</li>
+    <li><strong>Date:</strong> {{ appointment_date }}</li>
+    <li><strong>Time:</strong> {{ appointment_time }}</li>
+</ul>
+
+{% if appointment.remark %}
+<p><strong>Doctor's Remark:</strong><br>
+{{ appointment.remark }}</p>
+{% endif %}
+
+<p><strong>Important Instructions:</strong></p>
+<ul>
+    <li>Please arrive 15 minutes before your scheduled appointment time</li>
+    <li>Bring any relevant medical records or test reports</li>
+    <li>If you need to cancel, please do so at least 24 hours in advance</li>
+</ul>
+
+<p>Looking forward to providing you with the best healthcare service.</p>
+
+<p>Best regards,<br>
+The CuraWave Team</p>
+{% endblock %}

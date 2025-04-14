@@ -1,0 +1,25 @@
+{% extends "emails/base_email.html" %}
+
+{% block title %}Appointment Confirmation{% endblock %}
+
+{% block content %}
+<h2>Dear {{ patient_name }},</h2>
+
+<p>Your appointment has been successfully booked. Here are the details:</p>
+
+<ul>
+    <li><strong>Appointment Number:</strong> {{ appointment.appointmentnumber }}</li>
+    <li><strong>Doctor:</strong> {{ doctor_name }}</li>
+    <li><strong>Date:</strong> {{ appointment_date }}</li>
+    <li><strong>Time:</strong> {{ appointment_time }}</li>
+</ul>
+
+<p>Your appointment is currently pending confirmation from the doctor. We will notify you once the doctor reviews and confirms your appointment.</p>
+
+<p>If you need to cancel or reschedule your appointment, please log in to your account or contact us directly.</p>
+
+<p>Thank you for choosing CuraWave Healthcare.</p>
+
+<p>Best regards,<br>
+The CuraWave Team</p>
+{% endblock %}

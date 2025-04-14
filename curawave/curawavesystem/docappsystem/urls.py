@@ -25,6 +25,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('base/', views.BASE, name='base'),
     path('login', views.LOGIN, name='login'),
+    path('login/', views.LOGIN, name='login'),
+    path('doctor/login/', views.DOCTOR_LOGIN, name='doctor_login'),
+    path('patient/login/', views.PATIENT_LOGIN, name='patient_login'),
     
     path('doLogin', views.doLogin, name='doLogin'),
     path('doLogout', views.doLogout, name='logout'),
@@ -75,6 +78,11 @@ urlpatterns = [
     path('User_SearchAppointment', userviews.User_Search_Appointments, name='user_search_appointment'),
     path('ViewAppointmentDetails/<str:id>/', userviews.View_Appointment_Details, name='viewappointmentdetails'),
     
+    # Patient URLs
+    path('patient/signup/', userviews.patient_signup, name='patient_signup'),
+    path('patient/dashboard/', userviews.patient_dashboard, name='patient_dashboard'),
+    path('patient/profile/', userviews.patient_profile, name='patient_profile'),
+    path('patient/appointment/cancel/<int:appointment_id>/', userviews.cancel_appointment, name='cancel_appointment'),
  
     
     

@@ -190,3 +190,34 @@
 </div>
 
 {% endblock %}
+
+{% block extra_js %}
+<script>
+$(document).ready(function() {
+    // Force remove any existing backdrops
+    $('.modal-backdrop').remove();
+    $('body').removeClass('modal-open');
+    
+    // Initialize modal without backdrop
+    $('#myModal').modal({
+        backdrop: false,
+        keyboard: true,
+        show: false
+    });
+    
+    // When Take Action button is clicked
+    $('[data-toggle="modal"]').on('click', function() {
+        // Remove any existing backdrops
+        $('.modal-backdrop').remove();
+    });
+    
+    // When closing modal
+    $('#myModal').on('hide.bs.modal', function() {
+        $('.modal-backdrop').remove();
+        $('body').removeClass('modal-open');
+        $('body').css('padding-right', '');
+        $(this).find('form')[0].reset();
+    });
+});
+</script>
+{% endblock %}

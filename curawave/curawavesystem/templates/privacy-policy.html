@@ -1,0 +1,150 @@
+{% extends 'userbase.html' %}
+{% load static %}
+
+{% block content %}
+<!-- Page Header -->
+<div class="container-fluid page-header py-5 mb-5 wow fadeIn" data-wow-delay="0.1s">
+    <div class="container py-5">
+        <h1 class="display-3 text-white mb-3 animated slideInDown">Privacy Policy</h1>
+        <nav aria-label="breadcrumb animated slideInDown">
+            <ol class="breadcrumb text-uppercase mb-0">
+                <li class="breadcrumb-item"><a class="text-white" href="{% url 'index' %}">Home</a></li>
+                <li class="breadcrumb-item text-primary active" aria-current="page">Privacy Policy</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<!-- Privacy Policy Content -->
+<div class="container-xxl py-5">
+    <div class="container">
+        <div class="row g-5">
+            <!-- Main Content -->
+            <div class="col-lg-12">
+                <div class="wow fadeInUp" data-wow-delay="0.1s">
+                    <!-- Introduction -->
+                    <div class="bg-light rounded p-5 mb-4">
+                        <h2 class="text-primary mb-4">Your Privacy Matters to Us</h2>
+                        <p class="text-dark mb-4">At CuraWave, we are committed to protecting your privacy and ensuring the security of your personal information. This Privacy Policy explains how we collect, use, and safeguard your data.</p>
+                    </div>
+
+                    <!-- Information Collection -->
+                    <div class="bg-light rounded p-5 mb-4">
+                        <h4 class="text-primary mb-4">1. Information We Collect</h4>
+                        <p class="text-dark mb-4">We collect various types of information to provide you with the best possible healthcare services:</p>
+                        <ul class="list-unstyled mb-4">
+                            <li class="d-flex align-items-center mb-3">
+                                <i class="fas fa-shield-alt text-primary me-3"></i>
+                                <span>Health and medical information</span>
+                            </li>
+                            <li class="d-flex align-items-center mb-3">
+                                <i class="fas fa-calendar-check text-primary me-3"></i>
+                                <span>Appointment and scheduling information</span>
+                            </li>
+                            <li class="d-flex align-items-center mb-3">
+                                <i class="fas fa-envelope text-primary me-3"></i>
+                                <span>Communication preferences</span>
+                            </li>
+                            <li class="d-flex align-items-center mb-3">
+                                <i class="fas fa-user-circle text-primary me-3"></i>
+                                <span>Profile and account information</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Information Usage -->
+                    <div class="bg-light rounded p-5 mb-4">
+                        <h4 class="text-primary mb-4">2. How We Use Your Information</h4>
+                        <p class="text-dark mb-4">We use the information we collect to:</p>
+                        <ul class="list-unstyled mb-4">
+                            <li class="d-flex align-items-center mb-3">
+                                <i class="fas fa-calendar-alt text-primary me-3"></i>
+                                <span>Schedule and manage your appointments</span>
+                            </li>
+                            <li class="d-flex align-items-center mb-3">
+                                <i class="fas fa-user-md text-primary me-3"></i>
+                                <span>Provide medical services and care</span>
+                            </li>
+                            <li class="d-flex align-items-center mb-3">
+                                <i class="fas fa-comments text-primary me-3"></i>
+                                <span>Communicate with you about your health</span>
+                            </li>
+                            <li class="d-flex align-items-center mb-3">
+                                <i class="fas fa-chart-line text-primary me-3"></i>
+                                <span>Improve our services</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Data Protection -->
+                    <div class="bg-light rounded p-5 mb-4">
+                        <h4 class="text-primary mb-4">3. Data Protection</h4>
+                        <p class="text-dark mb-4">We implement industry-standard security measures to protect your personal information:</p>
+                        <ul class="list-unstyled mb-4">
+                            <li class="d-flex align-items-center mb-3">
+                                <i class="fas fa-lock text-primary me-3"></i>
+                                <span>Encryption of sensitive data</span>
+                            </li>
+                            <li class="d-flex align-items-center mb-3">
+                                <i class="fas fa-shield-alt text-primary me-3"></i>
+                                <span>Secure servers and databases</span>
+                            </li>
+                            <li class="d-flex align-items-center mb-3">
+                                <i class="fas fa-user-shield text-primary me-3"></i>
+                                <span>Strict access controls</span>
+                            </li>
+                        </ul>
+                        <p class="text-dark mb-0">We ensure compliance with HIPAA regulations and other applicable healthcare privacy laws.</p>
+                    </div>
+
+                    <!-- User Rights -->
+                    <div class="bg-light rounded p-5 mb-4">
+                        <h4 class="text-primary mb-4">4. Your Rights</h4>
+                        <p class="text-dark mb-4">You have the following rights regarding your personal information:</p>
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center mb-3">
+                                    <i class="fas fa-key text-primary me-3"></i>
+                                    <span>Access your information</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center mb-3">
+                                    <i class="fas fa-edit text-primary me-3"></i>
+                                    <span>Request corrections</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center mb-3">
+                                    <i class="fas fa-trash-alt text-primary me-3"></i>
+                                    <span>Request deletion</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center mb-3">
+                                    <i class="fas fa-bell-slash text-primary me-3"></i>
+                                    <span>Opt-out of communications</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contact Information -->
+                    <div class="bg-light rounded p-5">
+                        <h4 class="text-primary mb-4">5. Contact Us</h4>
+                        <p class="text-dark mb-4">If you have any questions about our Privacy Policy, please contact us:</p>
+                        <div class="d-flex align-items-center mb-3">
+                            <i class="fas fa-envelope text-primary me-3"></i>
+                            <span>privacy@curawave.com</span>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-phone text-primary me-3"></i>
+                            <span>1-800-CURAWAVE</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

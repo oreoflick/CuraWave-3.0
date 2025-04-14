@@ -53,48 +53,42 @@ def DOCSIGNUP(request):
 
 @login_required(login_url='/')
 def DOCTORHOME(request):
-    doctor_admin = request.user
-    doctor_reg = DoctorReg.objects.get(admin=doctor_admin)
-    allaptcount = Appointment.objects.filter(doctor_id=doctor_reg).count
-    newaptcount = Appointment.objects.filter(status='0',doctor_id=doctor_reg).count
-    appaptcount = Appointment.objects.filter(status='Approved',doctor_id=doctor_reg).count
-    canaptcount = Appointment.objects.filter(status='Cancelled',doctor_id=doctor_reg).count
-    comaptcount = Appointment.objects.filter(status='Completed',doctor_id=doctor_reg).count
-    context = {
-        'newaptcount':newaptcount,
-        'allaptcount':allaptcount,
-        'appaptcount':appaptcount,
-        'canaptcount':canaptcount,
-        'comaptcount':comaptcount        
+    try:
+        doctor_admin = request.user
+        doctor_reg = DoctorReg.objects.get(admin=doctor_admin)
+        
+        context = {
+            'allaptcount': Appointment.objects.get_doctor_appointments(doctor_reg).count(),
+            'newaptcount': Appointment.objects.get_pending_appointments(doctor_reg).count(),
+            'appaptcount': Appointment.objects.get_approved_appointments(doctor_reg).count(),
+            'canaptcount': Appointment.objects.get_cancelled_appointments(doctor_reg).count(),
+            'comaptcount': Appointment.objects.get_completed_appointments(doctor_reg).count(),
+            'upcoming_appointments': Appointment.objects.get_pending_appointments(doctor_reg)[:5],
+        }
+        return render(request, 'doc/dochome.html', context)
+    except DoctorReg.DoesNotExist:
+        messages.error(request, "Please complete your registration first")
+        return redirect('docsignup')
 
-
-    }
-    return render(request,'doc/dochome.html',context)
-
-
-
+@login_required(login_url='/')
 def View_Appointment(request):
     try:
         doctor_admin = request.user
         doctor_reg = DoctorReg.objects.get(admin=doctor_admin)
-        view_appointment = Appointment.objects.filter(doctor_id=doctor_reg)
-        
+        view_appointment = Appointment.objects.get_doctor_appointments(doctor_reg)
 
         # Pagination
-        paginator = Paginator(view_appointment, 5)  # Show 10 appointments per page
+        paginator = Paginator(view_appointment, 5)  # Show 5 appointments per page
         page = request.GET.get('page')
         try:
             view_appointment = paginator.page(page)
         except PageNotAnInteger:
-            # If page is not an integer, deliver first page.
             view_appointment = paginator.page(1)
         except EmptyPage:
-            # If page is out of range (e.g. 9999), deliver last page of results.
             view_appointment = paginator.page(paginator.num_pages)
 
         context = {'view_appointment': view_appointment}
     except Exception as e:
-        # Handle exceptions, such as database errors, gracefully
         context = {'error_message': str(e)}
 
     return render(request, 'doc/view_appointment.html', context)
@@ -134,33 +128,53 @@ def Patient_Appointment_Details_Remark(request):
     # If not POST, redirect to view appointment
     return redirect('view_appointment')
 
+@login_required(login_url='/')
 def Patient_Approved_Appointment(request):
-    doctor_admin = request.user
-    doctor_reg = DoctorReg.objects.get(admin=doctor_admin)
-    patientdetails1 = Appointment.objects.filter(status='Approved',doctor_id=doctor_reg)
-    context = {'patientdetails1': patientdetails1}
-    return render(request, 'doc/patient_app_appointment.html', context)
+    try:
+        doctor_admin = request.user
+        doctor_reg = DoctorReg.objects.get(admin=doctor_admin)
+        patientdetails1 = Appointment.objects.get_approved_appointments(doctor_reg)
+        context = {'patientdetails1': patientdetails1}
+        return render(request, 'doc/patient_app_appointment.html', context)
+    except DoctorReg.DoesNotExist:
+        messages.error(request, "Doctor profile not found")
+        return redirect('doctor_home')
 
+@login_required(login_url='/')
 def Patient_Cancelled_Appointment(request):
-    doctor_admin = request.user
-    doctor_reg = DoctorReg.objects.get(admin=doctor_admin)
-    patientdetails1 = Appointment.objects.filter(status='Cancelled',doctor_id=doctor_reg)
-    context = {'patientdetails1': patientdetails1}
-    return render(request, 'doc/patient_app_appointment.html', context)
+    try:
+        doctor_admin = request.user
+        doctor_reg = DoctorReg.objects.get(admin=doctor_admin)
+        patientdetails1 = Appointment.objects.get_cancelled_appointments(doctor_reg)
+        context = {'patientdetails1': patientdetails1}
+        return render(request, 'doc/patient_app_appointment.html', context)
+    except DoctorReg.DoesNotExist:
+        messages.error(request, "Doctor profile not found")
+        return redirect('doctor_home')
 
+@login_required(login_url='/')
 def Patient_New_Appointment(request):
-    doctor_admin = request.user
-    doctor_reg = DoctorReg.objects.get(admin=doctor_admin)
-    patientdetails1 = Appointment.objects.filter(status='0',doctor_id=doctor_reg)
-    context = {'patientdetails1': patientdetails1}
-    return render(request, 'doc/patient_app_appointment.html', context)
+    try:
+        doctor_admin = request.user
+        doctor_reg = DoctorReg.objects.get(admin=doctor_admin)
+        patientdetails1 = Appointment.objects.get_pending_appointments(doctor_reg)
+        context = {'patientdetails1': patientdetails1}
+        return render(request, 'doc/patient_app_appointment.html', context)
+    except DoctorReg.DoesNotExist:
+        messages.error(request, "Doctor profile not found")
+        return redirect('doctor_home')
 
+@login_required(login_url='/')
 def Patient_List_Approved_Appointment(request):
-    doctor_admin = request.user
-    doctor_reg = DoctorReg.objects.get(admin=doctor_admin)
-    patientdetails1 = Appointment.objects.filter(status='Approved',doctor_id=doctor_reg)
-    context = {'patientdetails1': patientdetails1}
-    return render(request, 'doc/patient_list_app_appointment.html', context)
+    try:
+        doctor_admin = request.user
+        doctor_reg = DoctorReg.objects.get(admin=doctor_admin)
+        patientdetails1 = Appointment.objects.get_approved_appointments(doctor_reg)
+        context = {'patientdetails1': patientdetails1}
+        return render(request, 'doc/patient_list_app_appointment.html', context)
+    except DoctorReg.DoesNotExist:
+        messages.error(request, "Doctor profile not found")
+        return redirect('doctor_home')
 
 def DoctorAppointmentList(request,id):
     patientdetails=Appointment.objects.filter(id=id)

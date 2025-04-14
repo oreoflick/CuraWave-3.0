@@ -1,86 +1,120 @@
 <!DOCTYPE html>
 <html lang="en">
-    {% load static %}
-   <head>
-     <meta charset="UTF-8">
-     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     <title>CuraWave - Dashboard</title>
-     
-     <!-- Modern Fonts -->
-     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
-     
-     <!-- Core CSS -->
-     <link rel="stylesheet" href="{% static 'assets/plugins/bootstrap/css/bootstrap.min.css'%}">
-     <link rel="stylesheet" href="{% static 'assets/plugins/fontawesome/css/fontawesome.min.css'%}">
-     <link rel="stylesheet" href="{% static 'assets/plugins/fontawesome/css/all.min.css'%}">
-     
-     <!-- Premium UI Components -->
-     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css">
-     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-     
-     <!-- Custom CSS -->
-     <link rel="stylesheet" href="{% static 'assets/css/style.css'%}">
-   </head>
-   <body class="premium-theme">
-
+{% load static %}
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+    <title>CuraWave - Dashboard</title>
+    <link rel="shortcut icon" href="{% static 'assets/img/favicon.png' %}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,500;0,600;0,700;1,400&amp;display=swap">
+    <link rel="stylesheet" href="{% static 'assets/plugins/bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/plugins/fontawesome/css/fontawesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/plugins/fontawesome/css/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+</head>
+<body>
     <div class="main-wrapper">
-        {% include 'includes/header.html' %}
-        {% include 'includes/sidebar.html' %}
-        
-        <div class="page-wrapper">
-            <div class="content-wrapper" data-aos="fade-up">
-                {% block content %}
-                {% endblock %}
+        <div class="header">
+            <div class="header-left">
+                {% if user.user_type == '1' %}
+                <a href="{% url 'admin_home' %}" class="logo">
+                {% elif user.user_type == '2' %}
+                <a href="{% url 'doctor_home' %}" class="logo">
+                {% elif user.user_type == '3' %}
+                <a href="{% url 'patient_dashboard' %}" class="logo">
+                {% else %}
+                <a href="{% url 'index' %}" class="logo">
+                {% endif %}
+                    <img src="{% static 'assets/img/logo.png' %}" alt="Logo">
+                </a>
+                {% if user.user_type == '1' %}
+                <a href="{% url 'admin_home' %}" class="logo logo-small">
+                {% elif user.user_type == '2' %}
+                <a href="{% url 'doctor_home' %}" class="logo logo-small">
+                {% elif user.user_type == '3' %}
+                <a href="{% url 'patient_dashboard' %}" class="logo logo-small">
+                {% else %}
+                <a href="{% url 'index' %}" class="logo logo-small">
+                {% endif %}
+                    <img src="{% static 'assets/img/logo-small.png' %}" alt="Logo" width="30" height="30">
+                </a>
             </div>
-            {% include 'includes/footer.html' %}
+            
+            <a class="mobile_btn" id="mobile_btn">
+                <i class="fas fa-bars"></i>
+            </a>
+            
+            <ul class="nav user-menu">
+                {% if user.is_authenticated %}
+                <li class="nav-item dropdown has-arrow">
+                    <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
+                        <span class="user-img">
+                            <img class="rounded-circle" src="{{ user.get_profile_pic_url }}" width="31" alt="{{ user.get_full_name }}">
+                        </span>
+                    </a>
+                    <div class="dropdown-menu">
+                        <div class="user-header">
+                            <div class="avatar avatar-sm">
+                                <img src="{{ user.get_profile_pic_url }}" alt="User Image" class="avatar-img rounded-circle">
+                            </div>
+                            <div class="user-text">
+                                <h6>{{ user.first_name }} {{ user.last_name }}</h6>
+                                <p class="text-muted mb-0">
+                                    {% if user.user_type == '1' %}Administrator
+                                    {% elif user.user_type == '2' %}Doctor
+                                    {% elif user.user_type == '3' %}Patient
+                                    {% endif %}
+                                </p>
+                            </div>
+                        </div>
+                        <a class="dropdown-item" href="{% url 'profile' %}">My Profile</a>
+                        <a class="dropdown-item" href="{% url 'change_password' %}">Change Password</a>
+                        <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+                    </div>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a href="{% url 'login' %}" class="nav-link">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="registerDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-user-plus"></i> Register
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="registerDropdown">
+                        <a class="dropdown-item" href="{% url 'docsignup' %}">
+                            <i class="fas fa-user-md"></i> Doctor Registration
+                        </a>
+                        <a class="dropdown-item" href="{% url 'patient_signup' %}">
+                            <i class="fas fa-user"></i> Patient Registration
+                        </a>
+                    </div>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+
+        {% if user.is_authenticated %}
+        {% if user.user_type == '1' %}
+        {% include 'includes/sidebar.html' %}
+        {% elif user.user_type == '2' %}
+        {% include 'includes/sidebar.html' %}
+        {% elif user.user_type == '3' %}
+        {% include 'includes/patientsidebar.html' %}
+        {% endif %}
+        {% endif %}
+
+        <div class="page-wrapper">
+            {% block content %}
+            {% endblock %}
         </div>
     </div>
 
-    <!-- Core Scripts -->
-    <script src="{% static 'assets/js/jquery-3.6.0.min.js'%}"></script>
-    <script src="{% static 'assets/js/popper.min.js'%}"></script>
-    <script src="{% static 'assets/plugins/bootstrap/js/bootstrap.min.js'%}"></script>
-    
-    <!-- Premium UI Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    
-    <!-- Custom Scripts -->
-    <script src="{% static 'assets/plugins/slimscroll/jquery.slimscroll.min.js'%}"></script>
-    <script src="{% static 'assets/plugins/apexchart/apexcharts.min.js'%}"></script>
-    <script src="{% static 'assets/plugins/apexchart/chart-data.js'%}"></script>
-    <script src="{% static 'assets/js/script.js'%}"></script>
-    
-    <script>
-        AOS.init({
-            duration: 800,
-            easing: 'ease-in-out',
-            once: true
-        });
-
-        // Add smooth scrolling to all elements
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
-            });
-        });
-
-        // Premium notifications
-        function showNotification(title, message, type) {
-            Swal.fire({
-                title: title,
-                text: message,
-                icon: type,
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 3000,
-                timerProgressBar: true
-            });
-        }
-    </script>
- </body>
+    <script src="{% static 'assets/js/jquery-3.6.0.min.js' %}"></script>
+    <script src="{% static 'assets/js/popper.min.js' %}"></script>
+    <script src="{% static 'assets/plugins/bootstrap/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'assets/plugins/slimscroll/jquery.slimscroll.min.js' %}"></script>
+    <script src="{% static 'assets/js/script.js' %}"></script>
+</body>
 </html>

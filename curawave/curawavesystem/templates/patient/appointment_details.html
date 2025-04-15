@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="content container-fluid">
+    <div class="page-header">
+        <div class="row align-items-center">
+            <div class="col">
+                <h3 class="page-title">Appointment Details</h3>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'patient_dashboard' %}">Dashboard</a></li>
+                    <li class="breadcrumb-item active">Appointment Details</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    {% if appointment %}
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="info-widget">
+                                <h4 class="card-title">Appointment Information</h4>
+                                <div class="clinic-details">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>Appointment ID</label>
+                                                <input class="form-control" type="text" value="{{ appointment.appointmentnumber }}" readonly>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>Booking Date</label>
+                                                <input class="form-control" type="text" value="{{ appointment.created_at|date:'d M Y' }}" readonly>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>Appointment Date</label>
+                                                <input class="form-control" type="text" value="{{ appointment.date_of_appointment }}" readonly>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>Appointment Time</label>
+                                                <input class="form-control" type="text" value="{{ appointment.time_of_appointment }}" readonly>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>Doctor</label>
+                                                <input class="form-control" type="text" value="Dr. {{ appointment.doctor_id.admin.get_full_name }}" readonly>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>Status</label>
+                                                <input class="form-control" type="text" 
+                                                    value="{% if appointment.status == '0' %}Pending
+                                                           {% elif appointment.status == 'Approved' %}Approved
+                                                           {% elif appointment.status == 'Cancelled' %}Cancelled
+                                                           {% elif appointment.status == 'Completed' %}Completed
+                                                           {% endif %}" readonly>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label>Your Message</label>
+                                                <textarea class="form-control" readonly>{{ appointment.additional_msg }}</textarea>
+                                            </div>
+                                        </div>
+                                        {% if appointment.status == 'Completed' %}
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label>Doctor's Remarks</label>
+                                                <textarea class="form-control" readonly>{{ appointment.remark }}</textarea>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label>Prescribed Medicine</label>
+                                                <textarea class="form-control" readonly>{{ appointment.prescription }}</textarea>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label>Recommended Tests</label>
+                                                <textarea class="form-control" readonly>{{ appointment.recommendedtest }}</textarea>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="text-center">
+                        <h4>Appointment not found</h4>
+                        <p>The requested appointment details could not be found.</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <a href="{% url 'patient_dashboard' %}" class="btn btn-primary">Back to Dashboard</a>
+            {% if appointment.status == '0' %}
+            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#cancelModal">
+                Cancel Appointment
+            </button>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Cancel Modal -->
+{% if appointment.status == '0' %}
+<div class="modal fade" id="cancelModal" tabindex="-1" role="dialog" aria-labelledby="cancelModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="cancelModalLabel">Cancel Appointment</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to cancel this appointment?</p>
+                <p class="text-danger"><small>This action cannot be undone.</small></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <form method="post" action="{% url 'cancel_appointment' appointment.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Cancel Appointment</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}

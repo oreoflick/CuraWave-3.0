@@ -14,17 +14,28 @@ def BASE(request):
 def LOGIN(request):
     return render(request,'login.html')
 
+def DOCTOR_LOGIN(request):
+    return render(request, 'doc/login.html')
+
+def PATIENT_LOGIN(request):
+    return render(request, 'patient/login.html')
+
 def doLogout(request):
     logout(request)
-    return redirect('login')
+    response = redirect('index')
+    response['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    response['Pragma'] = 'no-cache'
+    response['Expires'] = '0'
+    return response
 
 def doLogin(request):
     if request.method == 'POST':
         email = request.POST.get('email')
         password = request.POST.get('password')
+        user_type = request.POST.get('user_type')
         
-        if not email or not password:
-            messages.error(request, 'Please provide both email and password')
+        if not all([email, password, user_type]):
+            messages.error(request, 'Please provide all required information')
             return redirect('login')
             
         try:
@@ -32,17 +43,16 @@ def doLogin(request):
             
             if user is not None:
                 if user.is_active:
-                    login(request, user)
-                    user_type = user.user_type
-                    
-                    if user_type == '1':
-                        return redirect('admin_home')
-                    elif user_type == '2':
-                        return redirect('doctor_home')
-                    elif user_type == '3':
-                        return redirect('user_home')
+                    if user.user_type == user_type:
+                        login(request, user)
+                        if user_type == '1':
+                            return redirect('admin_home')
+                        elif user_type == '2':
+                            return redirect('doctor_home')
+                        elif user_type == '3':
+                            return redirect('patient_dashboard')
                     else:
-                        messages.error(request, 'Invalid user type')
+                        messages.error(request, f'This login is for {user_type} only')
                         return redirect('login')
                 else:
                     messages.error(request, 'Your account is not active')
@@ -60,38 +70,68 @@ def doLogin(request):
 @login_required(login_url='/')
 def PROFILE(request):
     user = CustomUser.objects.get(id=request.user.id)
+    
     context = {
         "user": user,
     }
-    return render(request,'profile.html',context)
 
-@login_required(login_url = '/')
+    if user.user_type == '2':  # Doctor
+        try:
+            doctor = DoctorReg.objects.get(admin=user)
+            context['doctor'] = doctor
+        except DoctorReg.DoesNotExist:
+            messages.error(request, "Doctor profile not found")
+            return redirect('docsignup')
+    elif user.user_type == '3':  # Patient
+        try:
+            patient = Patient.objects.get(user=user)
+            context['patient'] = patient
+        except Patient.DoesNotExist:
+            messages.error(request, "Patient profile not found")
+            return redirect('patient_signup')
+
+    return render(request, 'profile.html', context)
+
+@login_required(login_url='/')
 def PROFILE_UPDATE(request):
     if request.method == "POST":
+        user = CustomUser.objects.get(id=request.user.id)
         profile_pic = request.FILES.get('profile_pic')
         first_name = request.POST.get('first_name')
         last_name = request.POST.get('last_name')
-        #username = request.POST.get('username')
         email = request.POST.get('email')
-        #password = request.POST.get('password')
-        print(profile_pic)
+
         try:
-            customuser = CustomUser.objects.get(id=request.user.id)
+            # Update base user info
+            user.first_name = first_name
+            user.last_name = last_name
+            
+            if profile_pic:
+                user.profile_pic = profile_pic
+            
+            user.save()
 
-            customuser.first_name = first_name
-            customuser.last_name = last_name
-            #customuser.username = username
-            
-            if profile_pic != None and profile_pic != "":
-                customuser.profile_pic = profile_pic
-            
-            customuser.save()
-            messages.success(request,'Your Profile Updated Successfully!')
+            # Update role-specific info
+            if user.user_type == '2':  # Doctor
+                doctor = DoctorReg.objects.get(admin=user)
+                doctor.mobilenumber = request.POST.get('mobile')
+                doctor.specialization_id_id = request.POST.get('specialization')
+                doctor.save()
+            elif user.user_type == '3':  # Patient
+                patient = Patient.objects.get(user=user)
+                patient.mobile_number = request.POST.get('mobile')
+                patient.address = request.POST.get('address')
+                patient.blood_group = request.POST.get('blood_group')
+                patient.date_of_birth = request.POST.get('date_of_birth')
+                patient.save()
+
+            messages.success(request, 'Your Profile Updated Successfully!')
             return redirect('profile')
-        except:
-            messages.error(request,'Failed to Update Your Profile')
+        except Exception as e:
+            messages.error(request, f'Failed to Update Your Profile: {str(e)}')
+            return redirect('profile')
 
-    return render(request,'profile.html')
+    return redirect('profile')
 
 def CHANGE_PASSWORD(request):
     context = {}

@@ -1,99 +1,198 @@
 {% extends 'base.html' %}
 {% block content %}
 
-
 <div class="content container-fluid">
     <div class="page-header">
-       <div class="row">
-          <div class="col-sm-12">
-             <h3 class="page-title">Welcome Doctor {{ user.first_name }} {{ user.last_name }}!</h3>
-             <ul class="breadcrumb">
-                <li class="breadcrumb-item active">Dashboard</li>
-             </ul>
-          </div>
-       </div>
-    </div>
-    <div class="row">
-       <div class="col-xl-4 col-sm-6 col-12 d-flex">
-          <div class="card bg-one w-100">
-             <div class="card-body">
-                <div class="db-widgets d-flex justify-content-between align-items-center">
-                   <div class="db-icon">
-                      <i class="fas fa-file"></i>
-                   </div>
-                   <div class="db-info">
-                      <h3>{{allaptcount}}</h3>
-                      <h6>All Appointment</h6>
-                   </div>
-                </div>
-             </div>
-          </div>
-       </div>
-       <div class="col-xl-4 col-sm-6 col-12 d-flex">
-          <div class="card bg-two w-100">
-             <div class="card-body">
-                <div class="db-widgets d-flex justify-content-between align-items-center">
-                   <div class="db-icon">
-                      <i class="fas fa-file"></i>
-                   </div>
-                   <div class="db-info">
-                      <h3>{{newaptcount}}</h3>
-                      <a href="{% url 'patientnewappointment' %}"><h6>New Appointment</h6></a>
-                   </div>
-                </div>
-             </div>
-          </div>
-       </div>
-       <div class="col-xl-4 col-sm-6 col-12 d-flex">
-          <div class="card bg-four w-100">
-             <div class="card-body">
-                <div class="db-widgets d-flex justify-content-between align-items-center">
-                   <div class="db-icon">
-                      <i class="fas fa-file"></i>
-                   </div>
-                   <div class="db-info">
-                     <h3>{{appaptcount}}</h3>
-                     <a href="{% url 'patientapprovedappointment' %}"><h6>Approved Appointment</h6></a>
-                   </div>
-                </div>
-             </div>
-          </div>
-       </div>
-       <div class="col-xl-4 col-sm-6 col-12 d-flex">
-          <div class="card bg-three w-100">
-             <div class="card-body">
-                <div class="db-widgets d-flex justify-content-between align-items-center">
-                   <div class="db-icon">
-                      <i class="fas fa-file"></i>
-                   </div>
-                   <div class="db-info">
-                     <h3>{{canaptcount}}</h3>
-                     <a href="{% url 'patientcancelledappointment' %}"><h6>Cancelled Appointment</h6></a>
-                   </div>
-                </div>
-             </div>
-          </div>
-       </div>
-       <div class="col-xl-4 col-sm-6 col-12 d-flex">
-         <div class="card bg-four w-100">
-            <div class="card-body">
-               <div class="db-widgets d-flex justify-content-between align-items-center">
-                  <div class="db-icon">
-                     <i class="fas fa-file"></i>
-                  </div>
-                  <div class="db-info">
-                     <h3>{{comaptcount}}</h3>
-                     <a href="{% url 'patientappointmentcompleted' %}"><h6>Completed Appointment</h6></a>
-                  </div>
-               </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <h3 class="page-title">Welcome Dr. {{ request.user.get_full_name }}!</h3>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item active">Dashboard</li>
+                </ul>
             </div>
-         </div>
-      </div>
+        </div>
     </div>
-  
-    
- </div>
 
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert {% if message.tags == 'error' %}alert-danger{% else %}alert-{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    {% endfor %}
+    {% endif %}
 
+    <!-- Overview Cards -->
+    <div class="row">
+        <div class="col-xl-3 col-sm-6 col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="dash-widget-header">
+                        <span class="dash-widget-icon text-primary">
+                            <i class="fas fa-calendar-check"></i>
+                        </span>
+                        <div class="dash-widget-info">
+                            <h3>{{ allaptcount }}</h3>
+                            <h6 class="text-muted">Total Appointments</h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-sm-6 col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="dash-widget-header">
+                        <span class="dash-widget-icon text-warning">
+                            <i class="fas fa-clock"></i>
+                        </span>
+                        <div class="dash-widget-info">
+                            <h3>{{ newaptcount }}</h3>
+                            <h6 class="text-muted">Pending Appointments</h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-sm-6 col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="dash-widget-header">
+                        <span class="dash-widget-icon text-success">
+                            <i class="fas fa-check-circle"></i>
+                        </span>
+                        <div class="dash-widget-info">
+                            <h3>{{ appaptcount }}</h3>
+                            <h6 class="text-muted">Approved Appointments</h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-sm-6 col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="dash-widget-header">
+                        <span class="dash-widget-icon text-danger">
+                            <i class="fas fa-times-circle"></i>
+                        </span>
+                        <div class="dash-widget-info">
+                            <h3>{{ canaptcount }}</h3>
+                            <h6 class="text-muted">Cancelled Appointments</h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upcoming Appointments -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title d-inline-block">Upcoming Appointments</h4>
+                    <a href="{% url 'view_appointment' %}" class="btn btn-primary float-right">View All</a>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-center mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Patient Name</th>
+                                    <th>Appointment ID</th>
+                                    <th>Date</th>
+                                    <th>Time</th>
+                                    <th>Status</th>
+                                    <th class="text-right">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for appointment in upcoming_appointments %}
+                                <tr>
+                                    <td>
+                                        <h2 class="table-avatar">
+                                            {% if appointment.patient %}
+                                            <a href="#" class="avatar avatar-sm mr-2">
+                                                <img class="avatar-img rounded-circle" 
+                                                    src="{{ appointment.patient.user.get_profile_pic_url }}" 
+                                                    alt="Patient Image">
+                                            </a>
+                                            {% endif %}
+                                            <a href="#">{{ appointment.fullname }}</a>
+                                        </h2>
+                                    </td>
+                                    <td>{{ appointment.appointmentnumber }}</td>
+                                    <td>{{ appointment.date_of_appointment }}</td>
+                                    <td>{{ appointment.time_of_appointment }}</td>
+                                    <td>
+                                        <span class="badge {% if appointment.status == '0' %}badge-warning{% elif appointment.status == 'Approved' %}badge-success{% elif appointment.status == 'Cancelled' %}badge-danger{% elif appointment.status == 'Completed' %}badge-info{% endif %}">
+                                            {{ appointment.get_status_display|default:appointment.status }}
+                                        </span>
+                                    </td>
+                                    <td class="text-right">
+                                        <a href="{% url 'patientappointmentdetails' appointment.id %}" 
+                                            class="btn btn-sm bg-info-light">
+                                            <i class="far fa-eye"></i> View
+                                        </a>
+                                        {% if appointment.status == '0' %}
+                                        <form action="{% url 'patient_appointment_details_remark' %}" 
+                                            method="post" class="d-inline">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="pat_id" value="{{ appointment.id }}">
+                                            <input type="hidden" name="status" value="Approved">
+                                            <input type="hidden" name="remark" value="Approved by doctor">
+                                            <button type="submit" class="btn btn-sm bg-success-light">
+                                                <i class="fas fa-check"></i> Approve
+                                            </button>
+                                        </form>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="6" class="text-center">No upcoming appointments</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Quick Actions</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <a href="{% url 'patientnewappointment' %}" class="btn btn-primary btn-block">
+                                <i class="fas fa-clock mr-2"></i>View New Appointments
+                            </a>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="{% url 'patientapprovedappointment' %}" class="btn btn-success btn-block">
+                                <i class="fas fa-calendar-check mr-2"></i>View Approved Appointments
+                            </a>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="{% url 'view_appointment' %}" class="btn btn-info btn-block">
+                                <i class="fas fa-list-alt mr-2"></i>View All Appointments
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 {% endblock %}
